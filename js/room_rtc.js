@@ -1,4 +1,4 @@
-const APP_ID = "YOUR_APP_ID"; // 🔴 PUT YOUR REAL APP ID HERE
+const APP_ID = "270a0b5c5c92445ba2014ebfae9bb562"; // 🔴 PUT YOUR REAL AGORA APP ID HERE
 
 let uid = sessionStorage.getItem("uid");
 if (!uid) {
@@ -28,6 +28,15 @@ let remoteUsers = {};
 
 let localScreenTracks;
 let sharingScreen = false;
+
+// =======================
+// DISABLE / ENABLE CONTROLS
+// =======================
+const disableControls = (state) => {
+  document.getElementById("mic-btn").disabled = state;
+  document.getElementById("camera-btn").disabled = state;
+  document.getElementById("screen-btn").disabled = state;
+};
 
 // =======================
 // JOIN ROOM INIT
@@ -88,8 +97,10 @@ let joinStreams = async () => {
     .addEventListener("click", expandVideoFrame);
 
   localTracks[1].play(`user-${uid}`);
-
   await client.publish(localTracks);
+
+  // ✅ ENABLE CONTROLS AFTER TRACKS EXIST
+  disableControls(false);
 };
 
 // =======================
@@ -118,7 +129,6 @@ let handleUserPublished = async (user, mediaType) => {
   if (mediaType === "video") {
     user.videoTrack.play(`user-${user.uid}`);
   }
-
   if (mediaType === "audio") {
     user.audioTrack.play();
   }
@@ -126,7 +136,6 @@ let handleUserPublished = async (user, mediaType) => {
 
 let handleUserLeft = async (user) => {
   delete remoteUsers[user.uid];
-
   let item = document.getElementById(`user-container-${user.uid}`);
   if (item) item.remove();
 
@@ -139,6 +148,8 @@ let handleUserLeft = async (user) => {
 // CONTROLS
 // =======================
 let toggleMic = async (e) => {
+  if (!localTracks[0]) return;
+
   let button = e.currentTarget;
   if (localTracks[0].muted) {
     await localTracks[0].setMuted(false);
@@ -150,6 +161,8 @@ let toggleMic = async (e) => {
 };
 
 let toggleCamera = async (e) => {
+  if (!localTracks[1]) return;
+
   let button = e.currentTarget;
   if (localTracks[1].muted) {
     await localTracks[1].setMuted(false);
@@ -164,11 +177,14 @@ let toggleCamera = async (e) => {
 // SCREEN SHARE
 // =======================
 let toggleScreen = async (e) => {
+  if (!localTracks[1]) return;
+
   let screenButton = e.currentTarget;
   let cameraButton = document.getElementById("camera-btn");
 
   if (!sharingScreen) {
     sharingScreen = true;
+
     screenButton.classList.add("active");
     cameraButton.classList.remove("active");
     cameraButton.style.display = "none";
@@ -180,6 +196,7 @@ let toggleScreen = async (e) => {
     localScreenTracks.play(`user-${uid}`);
   } else {
     sharingScreen = false;
+
     cameraButton.style.display = "block";
     screenButton.classList.remove("active");
 
@@ -219,5 +236,8 @@ document.getElementById("screen-btn").addEventListener("click", toggleScreen);
 document.getElementById("join-btn").addEventListener("click", joinStreams);
 document.getElementById("leave-btn").addEventListener("click", leaveStream);
 
+// =======================
 // INIT
+// =======================
+disableControls(true);
 joinRoomInit();
