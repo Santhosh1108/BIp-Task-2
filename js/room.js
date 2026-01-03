@@ -1,23 +1,12 @@
+// Auto-scroll chat to bottom
 let messagesContainer = document.getElementById("messages");
 messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-const memberContainer = document.getElementById("members__container");
-const memberButton = document.getElementById("members__button");
-
+// =======================
+// CHAT TOGGLE
+// =======================
 const chatContainer = document.getElementById("messages__container");
 const chatButton = document.getElementById("chat__button");
-
-let activeMemberContainer = false;
-
-memberButton.addEventListener("click", () => {
-  if (activeMemberContainer) {
-    memberContainer.style.display = "none";
-  } else {
-    memberContainer.style.display = "block";
-  }
-
-  activeMemberContainer = !activeMemberContainer;
-});
 
 let activeChatContainer = false;
 
@@ -27,48 +16,66 @@ chatButton.addEventListener("click", () => {
   } else {
     chatContainer.style.display = "block";
   }
-
   activeChatContainer = !activeChatContainer;
 });
 
+// =======================
+// VIDEO EXPAND / SHRINK LOGIC
+// =======================
 let displayFrame = document.getElementById("stream__box");
 let videoFrames = document.getElementsByClassName("video__container");
 
 let userIdInDisplayFrame = null;
 
+// Expand video when clicked
 let expandVideoFrame = (e) => {
   let child = displayFrame.children[0];
 
+  // Move existing expanded video back
   if (child) {
     document.getElementById("streams__container").appendChild(child);
   }
 
   displayFrame.style.display = "block";
-
   displayFrame.appendChild(e.currentTarget);
+
   userIdInDisplayFrame = e.currentTarget.id;
 
-  for (let i = 0; videoFrames.length > i; i++) {
-    if (videoFrames[i].id != userIdInDisplayFrame) {
+  // Shrink other videos
+  for (let i = 0; i < videoFrames.length; i++) {
+    if (videoFrames[i].id !== userIdInDisplayFrame) {
       videoFrames[i].style.height = "100px";
       videoFrames[i].style.width = "100px";
     }
   }
 };
 
-for (let i = 0; videoFrames.length > i; i++) {
-  videoFrames[i].addEventListener("click", expandVideoFrame);
-}
+// Attach click listener to each video frame
+let addVideoFrameListeners = () => {
+  for (let i = 0; i < videoFrames.length; i++) {
+    videoFrames[i].addEventListener("click", expandVideoFrame);
+  }
+};
 
+// Call once initially
+addVideoFrameListeners();
+
+// Hide expanded display frame
 let hideDisplayFrame = () => {
   userIdInDisplayFrame = null;
   displayFrame.style.display = null;
+
   let child = displayFrame.children[0];
+  if (child) {
+    document.getElementById("streams__container").appendChild(child);
+  }
 
-  document.getElementById("streams__container").appendChild(child);
-
-  for (let i = 0; videoFrames.length > 1; i++) {
+  // Reset all videos to normal size
+  for (let i = 0; i < videoFrames.length; i++) {
     videoFrames[i].style.height = "300px";
     videoFrames[i].style.width = "300px";
   }
 };
+
+// Hide expanded frame when clicking on it
+displayFrame.addEventListener("click", hideDisplayFrame);
