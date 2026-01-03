@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="shortcut icon" href="images/logo.png" type="image/svg+xml">
+  <link rel="shortcut icon" href="./images/logo.png" type="image/svg+xml">
   <title>Room</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" type="text/css" href="styles/main.css">
-  <link rel="stylesheet" type="text/css" href="styles/room.css">
+  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/room.css">
 </head>
 
 <body>
@@ -16,9 +16,10 @@
   <!-- ================= HEADER ================= -->
   <header id="nav">
     <div class="nav--list">
-      <a href="/index.html">
+      <!-- FIXED: relative path -->
+      <a href="./index.html">
         <h3 id="logo">
-          <img src="images/logo.png" alt="Logo">
+          <img src="./images/logo.png" alt="Logo">
         </h3>
       </a>
     </div>
@@ -30,7 +31,8 @@
         </svg>
       </button>
 
-      <a class="nav__link" id="create__room__btn" href="/index.html">
+      <!-- FIXED: relative path -->
+      <a class="nav__link" id="create__room__btn" href="./index.html">
         Create Room
       </a>
     </div>
@@ -52,7 +54,6 @@
       <!-- ===== Video Section ===== -->
       <section id="stream__container">
         <div id="stream__box"></div>
-
         <div id="streams__container"></div>
 
         <div class="stream__actions" style="display:none;">
@@ -96,11 +97,11 @@
   </main>
 
   <!-- ================= SCRIPTS ================= -->
-  <script src="js/agora/AgoraRTC_N-4.17.2.js"></script>
-  <script src="js/agora/agora-rtm-sdk-1.5.1.js"></script>
-  <script src="js/room.js"></script>
-  <script src="js/room_rtm.js"></script>
-  <script src="js/room_rtc.js"></script>
+  <script src="./js/agora/AgoraRTC_N-4.17.2.js"></script>
+  <script src="./js/agora/agora-rtm-sdk-1.5.1.js"></script>
+  <script src="./js/room.js"></script>
+  <script src="./js/room_rtm.js"></script>
+  <script src="./js/room_rtc.js"></script>
 
 </body>
 </html>
