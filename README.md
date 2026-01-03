@@ -1,2 +1,3 @@
 # BIp-Task-2
-(redeploy)
+redeploy pages
+
